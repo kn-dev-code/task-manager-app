@@ -19,7 +19,7 @@ import { Env } from "../config/env-config";
   })
  
 
- return res.cookie("accesstoken", token, {
+ return res.cookie("accessToken", token, {
   maxAge: 7 * 24 * 60 * 60 * 1000,
   httpOnly: true,
   secure: Env.NODE_ENV === "production" ? true : false,
@@ -28,4 +28,4 @@ import { Env } from "../config/env-config";
 }
 
 export const clearJWTCookie = (res: Response) => 
-  res.clearCookie("accesstoken", {path: "/"});
+  res.clearCookie("accessToken", {path: "/"});

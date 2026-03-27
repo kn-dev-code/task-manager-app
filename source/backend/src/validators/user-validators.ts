@@ -17,7 +17,7 @@ export const RegisterSchema = z.object({
   name: z.string().min(1),
   email: emailSchema,
   password: passwordSchema,
-  planType: z.enum(["free", "pro", "premium"])
+  planType: z.enum(["free", "pro", "premium"]).default("free")
 })
 
 export const LoginSchema = z.object({

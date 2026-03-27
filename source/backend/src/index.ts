@@ -10,7 +10,7 @@ import connectDatabase from "./config/database-config";
 import { logger } from "./config/winston-config";
 import passport from "passport";
 import mainRouter from "./routes";
-
+import cookieParser from "cookie-parser";
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +26,7 @@ app.use(cors({
 }));
 
 app.use(passport.initialize());
+app.use(cookieParser());
 app.get("/health", asyncHandler(async (req: Request, res: Response) => {
   res.status(HTTPSTATUS.OK).json({
     message: "Server is healthy",
