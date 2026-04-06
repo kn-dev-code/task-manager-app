@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express"
+import express, { Request, Response, NextFunction } from "express"
 import cors from "cors";
 import helmet from "helmet";
 import http from "http";
@@ -8,9 +8,9 @@ import { HTTPSTATUS } from "./config/http-config";
 import { errorHandler } from "./middleware/error-handler";
 import connectDatabase from "./config/database-config";
 import { logger } from "./config/winston-config";
-import passport from "passport";
 import mainRouter from "./routes";
 import cookieParser from "cookie-parser";
+import passport from "passport";
 
 
 
@@ -32,8 +32,14 @@ allowedHeaders: ["Content-Type", "Authorization"]
 
 
 
-app.use(passport.initialize());
 app.use(cookieParser());
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(`[INCOMING REQUEST] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+
 app.get("/health", asyncHandler(async (req: Request, res: Response) => {
 res.status(HTTPSTATUS.OK).json({
 message: "Server is healthy",
@@ -42,11 +48,9 @@ status: "OK",
 }))
 
 
-
+app.use(passport.initialize());
 app.use("/api", mainRouter);
 app.use(errorHandler);
-
-
 
 server.listen(Env?.PORT, async() => {
 await connectDatabase();

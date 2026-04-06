@@ -1,12 +1,12 @@
 import UserModel, { UserDocument } from "../models/user-model";
-import { NotFoundException, UnauthorizedException } from "../util/app-error";
+import { NotFoundException, BadRequestException} from "../util/app-error";
 import { LoginSchemaType, RegisterSchemaType } from "../validators/user-validators";
 
 
 export const registerService = async(body: RegisterSchemaType) => {
 const {email} = body;
 const existingUser = await UserModel.findOne({email});
-if (existingUser) throw new UnauthorizedException("Unauthorized");
+if (existingUser) {throw new BadRequestException("This email is already registered.");}
 
 const newUser = new UserModel({
   name: body.name,
@@ -24,5 +24,6 @@ export const loginService = async(body: LoginSchemaType) => {
   if (!user) throw new NotFoundException("Resource Not Found");
 
   const isPasswordValid = await user.comparePassword(password)
+  if (!isPasswordValid) throw new BadRequestException("Invalid credentials");
   return user;
 }

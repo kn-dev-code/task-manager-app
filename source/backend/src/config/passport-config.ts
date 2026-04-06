@@ -1,30 +1,32 @@
 import passport from "passport";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { Env } from "./env-config";
-import { UnauthorizedException } from "../util/app-error";
 import { findByIdUserService } from "../services/user-services";
 
-
-
 passport.use(
-  new JWTStrategy({
-jwtFromRequest: ExtractJwt.fromExtractors([
-  (req) => {
-    const token = req.cookies.accessToken;
-    if (!token) throw new UnauthorizedException("Unauthorized accesss");
-    return token;
-  },
-]),
-secretOrKey: Env.JWT_SECRET,
-audience: ["user"],
-algorithms: ["HS256"],
-  },
-  async({userId}, done) => {
-    try {
-        const user = userId && (await findByIdUserService(userId));
-        return done(null, user || false);
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (req) => {
+         return req?.cookies?.accessToken || null;
+        },
+      ]),
+      secretOrKey: Env.JWT_SECRET,
+      audience: ["user"],
+      algorithms: ["HS256"],
+    },
+    async (payload, done) => {
+      try {
+        const userId = payload.userId; 
+        const user = await findByIdUserService(userId);
+        
+        if (!user) {
+          return done(null, false);
+        }
+        
+        return done(null, user);
       } catch (error) {
-        return done(null, false);
+        return done(error, false);
       }
     }
   )

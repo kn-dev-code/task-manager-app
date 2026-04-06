@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import taskImg from "../../assets/tasksheet-img.png"
 import { useNavigate } from "react-router-dom"
-import { toast } from "sonner"
+import { toast} from "sonner"
 
 const SignUp = () => {
   const { register, isSigningUp } = useAuth()
