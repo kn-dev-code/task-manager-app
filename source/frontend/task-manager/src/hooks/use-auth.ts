@@ -3,8 +3,14 @@ import type { LoginType, RegisterType } from "../types/auth-types";
 import { create } from "zustand";
 import { API } from "../lib/api-client";
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  password?: string;
+}
 interface AuthState {
-  user: string | null;
+  user: User | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isAuthStatusLoading: boolean;
