@@ -23,7 +23,7 @@ const userSchema = new Schema<UserDocument>(
       type: String, required: true, unique: true, trim: true, lowercase: true,
     },
     password: {
-      type: String, required: true, lowercase: true,
+      type: String, required: true,
     },
     planType: {
       type: String, enum: ["free", "pro", "premium"], default: "free",
@@ -48,7 +48,7 @@ userSchema.pre("save", async function (next) {
 })
 
 userSchema.methods.comparePassword = async function (val: string) {
-  return compareValue(val, this.password)
+    return compareValue(val, this.password)
 }
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);

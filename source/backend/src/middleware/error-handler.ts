@@ -6,7 +6,8 @@ import { logger } from "../config/winston-config"
 
 export const errorHandler: ErrorRequestHandler = (
   error, req, res, _next): any => {
-    logger.info(`Error occurred: ${req.path}`, error);
+    const statusCode = error instanceof AppError ? error.statusCode : 500;
+    logger.error(`[${statusCode}] ${req.method} ${req.path} - ${error.message}`);
 
     if (error instanceof AppError) {
       return res.status(error.statusCode).json({

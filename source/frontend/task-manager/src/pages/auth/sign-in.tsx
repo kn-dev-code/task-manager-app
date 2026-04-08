@@ -38,7 +38,6 @@ const SignIn = () => {
      if (isLoggingIn) return;
     try {
       await login(values)
-      toast.success("Account created successfully! Redirecting...")
       setTimeout(() => {
         navigate("/")
       }, 2000);

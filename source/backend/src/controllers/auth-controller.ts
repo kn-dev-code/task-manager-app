@@ -27,7 +27,6 @@ export const loginController = asyncHandler(async(req: Request, res: Response) =
 const body = LoginSchema.parse(req.body);
 const user = await loginService(body);
 const userId = (user._id as any).toString();
-if (!user) throw new NotFoundException("Resource Not Found");
 
 return JWTAuth({res, userId}).status(HTTPSTATUS.OK).json({
   message: "User login successfully",

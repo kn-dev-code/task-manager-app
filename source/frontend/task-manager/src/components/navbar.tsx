@@ -2,7 +2,6 @@ import { Button } from "./ui/button"
 import {Link} from "react-router-dom"
 import { useAuth } from "@/hooks/use-auth";
 import {useState} from "react";
-import { toast } from "sonner";
 import taskLogo from "@/assets/task-icon.jpeg";
 
 const NavBar = () => {
@@ -18,7 +17,6 @@ const handleLogout = async () => {
 setIsLoggingOut(true);
 try {
 await logout();
-toast.success("Logged out successfully!");
 setShowConfirm(false);
 } catch(e) {
 console.error("Logout error:", e);
@@ -29,16 +27,17 @@ setIsLoggingOut(false);
 
 return (
 <div className="bg-linear-to-r from-[#A1A1A1] via-[#818181] to-[#3B3B3B] brightness-110 h-15 flex flex-row justify-between items-center">
+  <div className = "flex flex-row items-center gap-2">
   <Link to = "/" className = "hover:scale-105 transition-all"><img className = "w-12 h-11 rounded-[15px] ml-5"src = {taskLogo}/></Link>
-<Link to="/"><h1 className="text-lg font-bold pl-1 cursor-pointer mr-269">Taskify</h1></Link>
-
+<Link to="/"><h1 className="text-lg font-bold pl-1 cursor-pointer place-items-start">Taskify</h1></Link>
+  </div>
 
 <div className="flex flex-row gap-3 pr-2 items-center">
   {user ? (
     <>
       {!showConfirm ? (
         <>
-          <span className="text-white font-semibold pr-4">Hello, {user.name}</span>
+          <span className="text-white font-semibold">Hello, {user.name}</span>
           <Button 
             onClick={() => setShowConfirm(true)} 
             className="w-25 h-9 text-[#EA7474] text-md font-bold bg-[#D9D9D9] cursor-pointer hover:scale-105"

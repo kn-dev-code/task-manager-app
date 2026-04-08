@@ -40,7 +40,6 @@ const SignUp = () => {
      if (isSigningUp) return;
     try {
       await register(values)
-      toast.success("Account created successfully! Redirecting...")
       setTimeout(() => {
         navigate("/")
       }, 2000);
