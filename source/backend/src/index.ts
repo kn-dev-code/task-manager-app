@@ -14,7 +14,7 @@ import passport from "passport";
 
 
 
-const app = express();
+export const app = express();
 const server = http.createServer(app);
 
 
@@ -52,7 +52,8 @@ app.use(passport.initialize());
 app.use("/api", mainRouter);
 app.use(errorHandler);
 
+if (Env.NODE_ENV !== "test") {
 server.listen(Env?.PORT, async() => {
 await connectDatabase();
 logger.info(`Server running on port ${Env?.PORT} in ${Env?.NODE_ENV} mode`)
-})
+})}

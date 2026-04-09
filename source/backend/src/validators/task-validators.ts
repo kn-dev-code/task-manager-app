@@ -9,7 +9,6 @@ export const TaskSchema = z.object({
   priority: z.enum(['low', 'medium', 'high']).default('medium'),
   dueDate: z.coerce.date().optional(),
   tags: z.array(z.string()).default([]),
-  userId: z.string().min(1),
 })
 
 
