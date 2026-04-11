@@ -4,6 +4,7 @@ import Dashboard from "./components/dashboard";
 import SignUp from "./pages/auth/sign-up";
 import SignIn from "./pages/auth/sign-in";
 import {Toaster} from "sonner";
+import Task from "./components/task";
 
 export function App() {
 
@@ -15,6 +16,7 @@ return (
 <Route path = "/" element = {<Dashboard/>}/>
 <Route path = "/sign-up" element = {<SignUp/>}/>
 <Route path = "/sign-in" element = {<SignIn/>}/>
+<Route path = "/tasks" element = {<Task/>}/>
 </Routes>
 </BrowserRouter>
 

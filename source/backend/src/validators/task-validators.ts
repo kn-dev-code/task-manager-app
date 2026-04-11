@@ -4,7 +4,7 @@ import {z} from "zod";
 
 export const TaskSchema = z.object({
   title: z.string().min(1),
-  description: z.string().min(1),
+  description: z.string().min(1).optional(),
   status: z.enum(['complete', 'in-progress', 'to-do']).default('to-do'),
   priority: z.enum(['low', 'medium', 'high']).default('medium'),
   dueDate: z.coerce.date().optional(),
