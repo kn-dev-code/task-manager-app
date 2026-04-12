@@ -1,5 +1,3 @@
-
-
 export type RegisterType = {
   name: string;
   email?: string;
@@ -18,7 +16,8 @@ export interface UserType {
 _id: string;
 name: string;
 email: string;
-password: string;
-createdAt: Date;
-updatedAt: Date;
+password?: string;
+createdAt?: Date;
+updatedAt?: Date;
+planType?: "free" | "pro" | "premium";
 };
