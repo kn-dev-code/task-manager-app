@@ -7,8 +7,10 @@ import { BadRequestException, UnauthorizedException } from "../util/app-error";
 
 
 export const createTaskController = asyncHandler(async(req: Request, res: Response) => {
+const user = req.user?._id;
+if (!user) throw new UnauthorizedException("User not found in the request.");
 const body = TaskSchema.parse(req.body);
-const task = await createTaskService(body, req.user);
+const task = await createTaskService(body, user);
 
 return res.status(HTTPSTATUS.CREATED).json({
   success: true,
