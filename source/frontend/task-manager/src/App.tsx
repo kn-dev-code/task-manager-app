@@ -4,8 +4,8 @@ import Dashboard from "./components/dashboard";
 import SignUp from "./pages/auth/sign-up";
 import SignIn from "./pages/auth/sign-in";
 import Subscription from "./pages/subscription/Subscription";
+import Task from "./tasks/components/taskpage";
 import {Toaster} from "sonner";
-import Task from "./components/task";
 
 export function App() {
 
@@ -18,11 +18,12 @@ return (
 <Route path = "/sign-up" element = {<SignUp/>}/>
 <Route path = "/sign-in" element = {<SignIn/>}/>
 <Route path = "/subscription" element={<Subscription/>}/>
-<Route path = "/tasks" element = {<Task/>}/>
+<Route path = "/tasks" element={<Task />} />
+
 </Routes>
 </BrowserRouter>
 
-)
+);
 }
 
-export default App
+export default App;
