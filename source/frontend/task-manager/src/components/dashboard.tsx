@@ -8,7 +8,7 @@ const Dashboard = () => {
       {user ? (
         <>
         <h1 className = "text-5xl">Welcome back, <span className = "text-[#EA7474]">{user.name}!</span></h1>
-        <Link to = ""><Button className = "w-40 h-12 text-[#EA7474] text-md font-bold bg-[#D9D9D9] cursor-pointer hover:scale-105">View Tasks</Button></Link>
+        <Link to = "/tasks"><Button className = "w-40 h-12 text-[#EA7474] text-md font-bold bg-[#D9D9D9] cursor-pointer hover:scale-105">View Tasks</Button></Link>
         </>
       ) : (
         <>

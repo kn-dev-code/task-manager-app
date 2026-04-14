@@ -47,7 +47,7 @@ export const useTask = create<TaskState>()((set) => ({
     }
   },
 
-  update: async(data: updateTaskType, id: string) => {
+  update: async(data: updateTaskType, id) => {
     set({isUpdating: true});
     try {
       const response = await API.put(`/task/update-task/${id}`, data);
