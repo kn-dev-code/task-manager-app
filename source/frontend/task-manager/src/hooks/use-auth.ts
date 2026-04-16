@@ -9,6 +9,7 @@ interface User {
   email: string;
   password?: string;
 }
+
 interface AuthState {
   user: User | null;
   isSigningUp: boolean;

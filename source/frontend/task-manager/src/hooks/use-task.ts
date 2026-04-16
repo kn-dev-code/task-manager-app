@@ -29,7 +29,7 @@ interface TaskState {
 }
 
 export const useTask = create<TaskState>()((set) => ({
-  tasks: null,
+  tasks: [] as Task[] | [],
   isCreating: false,
   isUpdating: false,
   isDeleting: false,
