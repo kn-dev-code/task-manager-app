@@ -25,5 +25,11 @@ export const LoginSchema = z.object({
   password: passwordSchema,
 })
 
+export const upgradePlanSchema = z.object({
+  newPlanType: z.enum(["free", "pro", "premium"]),
+}).strict();
+
+
+export type UpgradePlanType = z.infer<typeof upgradePlanSchema>;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 export type LoginSchemaType = z.infer<typeof LoginSchema>;

@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import Dashboard from "@/components/dashboard"
 
 const taskSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -74,13 +75,13 @@ const Task = () => {
     }
   }
 
-  if (!user) {
+  
+    if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(to_right,#8BC0FC_0%,#739ED0_43%,#6F99C9_62%,#537296_100%)]">
-        <h1 className="text-2xl font-bold text-white">Please log in first</h1>
-      </div>
+     <Dashboard/>
     )
   }
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-[linear-gradient(to_right,#8BC0FC_0%,#739ED0_43%,#6F99C9_62%,#537296_100%)] pb-10">
       <div className="mt-10 w-full max-w-7xl overflow-hidden px-10">

@@ -8,6 +8,7 @@ interface User {
   name: string;
   email: string;
   password?: string;
+  planType: 'free' | 'premium' | 'pro';
 }
 
 interface AuthState {
@@ -15,12 +16,14 @@ interface AuthState {
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isAuthStatusLoading: boolean;
+  isUpgrading: boolean;
 
 
   register: (data: RegisterType) => void;
   login: (data: LoginType) => void;
   logout: () => void;
   isAuthStatus: () => void;
+  isUpgradingPlan: (planType: 'free' | 'premium' | 'pro') => void;
 }
 
 export const useAuth = create<AuthState>()((set) => ({
@@ -28,6 +31,7 @@ export const useAuth = create<AuthState>()((set) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isAuthStatusLoading: false,
+  isUpgrading: false,
 
   register: async (data: RegisterType) => {
     set({ isSigningUp: true });
@@ -75,6 +79,20 @@ export const useAuth = create<AuthState>()((set) => ({
     }
     finally {
       set({ isAuthStatusLoading: false });
+    }
+  },
+
+  isUpgradingPlan: async(planType) => {
+    set({isUpgrading: true});
+    try {
+      const response = await API.patch("/user/upgrade-plan", {newPlantype: planType});
+      set({user: response.data.user});
+      toast.success("Plan upgraded successfully");
+    } catch(e: any) {
+      toast.error(e.response?.data?.message || "Plan upgrade failed");
+      console.log(e);
+    } finally {
+      set({isUpgrading: false});
     }
   }
 }))
