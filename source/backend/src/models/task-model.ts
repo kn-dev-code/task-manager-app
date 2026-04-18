@@ -14,7 +14,6 @@ export interface TaskDocument extends Document {
   updatedAt: Date;
 };
 
-
 const taskSchema = new Schema<TaskDocument>(
   {
     title: {

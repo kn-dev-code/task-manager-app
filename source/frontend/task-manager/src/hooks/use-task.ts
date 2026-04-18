@@ -29,7 +29,7 @@ interface TaskState {
 }
 
 export const useTask = create<TaskState>()((set) => ({
-  tasks: null,
+  tasks: [] as Task[] | [],
   isCreating: false,
   isUpdating: false,
   isDeleting: false,
@@ -47,7 +47,7 @@ export const useTask = create<TaskState>()((set) => ({
     }
   },
 
-  update: async(data: updateTaskType, id: string) => {
+  update: async(data: updateTaskType, id) => {
     set({isUpdating: true});
     try {
       const response = await API.put(`/task/update-task/${id}`, data);

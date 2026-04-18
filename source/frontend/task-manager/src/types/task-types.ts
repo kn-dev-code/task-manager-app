@@ -1,5 +1,4 @@
 export type createTaskType = {
-  id: string;
   title: string;
   description?: string;
   status: 'complete' | 'in-progress' | 'to-do';
