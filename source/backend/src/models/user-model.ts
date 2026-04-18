@@ -9,6 +9,7 @@ export interface UserDocument extends Document {
   createdAt: Date;
   updatedAt: Date;
   planType: "free" | "pro" | "premium";
+  role: "user" | "admin";
   comparePassword(value: string): Promise<boolean>;
 }
 
@@ -28,6 +29,7 @@ const userSchema = new Schema<UserDocument>(
     planType: {
       type: String, enum: ["free", "pro", "premium"], default: "free",
     },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
   }, {
   timestamps: true,
   toJSON: {

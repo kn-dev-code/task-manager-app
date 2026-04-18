@@ -7,6 +7,7 @@ import {Toaster} from "sonner";
 import Task from "./tasks/components/task";
 import Subscription from "./pages/subscription/subscription";
 import PaymentPage from "./pages/subscription/payment";
+import AdminView from "./pages/auth/admin-view";
 
 export function App() {
 
@@ -22,6 +23,7 @@ return (
 <Route path = "/subscription" element = {<Subscription/>}/>
 <Route path = "/subscription-plan" element = {<PaymentPage/>}/>
 <Route path = "/subscription-plan/:accessKey" element = {<PaymentPage/>}/>
+<Route path = "/admin" element = {<AdminView/>}/>
 </Routes>
 </BrowserRouter>
 

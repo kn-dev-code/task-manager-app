@@ -14,7 +14,6 @@ export interface TaskDocument extends Document {
   userId: Types.ObjectId;
 };
 
-
 const taskSchema = new Schema<TaskDocument>(
   {
     title: {
