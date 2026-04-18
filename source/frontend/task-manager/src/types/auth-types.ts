@@ -12,8 +12,6 @@ export type LoginType = {
   password: string;
 };
 
-
-
 export interface UserType {
 _id: string;
 name: string;

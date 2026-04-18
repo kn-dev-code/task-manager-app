@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import type { LoginType, RegisterType } from "../types/auth-types";
 import { create } from "zustand";
 import { API } from "../lib/api-client";
+import type { PaymentType } from "@/types/payment-types";
 
 interface User {
   _id: string;
@@ -23,7 +24,7 @@ interface AuthState {
   login: (data: LoginType) => void;
   logout: () => void;
   isAuthStatus: () => void;
-  isUpgradingPlan: (planType: 'free' | 'premium' | 'pro') => void;
+  isUpgradingPlan: (data: User["planType"]) => void;
 }
 
 export const useAuth = create<AuthState>()((set) => ({
@@ -82,10 +83,10 @@ export const useAuth = create<AuthState>()((set) => ({
     }
   },
 
-  isUpgradingPlan: async(planType) => {
+  isUpgradingPlan: async(planId: User["planType"]) => {
     set({isUpgrading: true});
     try {
-      const response = await API.patch("/user/upgrade-plan", {newPlantype: planType});
+      const response = await API.patch("/user/upgrade-plan", {newPlantype: planId});
       set({user: response.data.user});
       toast.success("Plan upgraded successfully");
     } catch(e: any) {

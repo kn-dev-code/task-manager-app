@@ -6,7 +6,6 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CreditCard, Wallet, Loader2, Lock } from "lucide-react"
 import { toast } from "sonner"
-
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -16,9 +15,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useAuth } from "@/hooks/use-auth"
+import Dashboard from "@/components/dashboard"
+import { useParams } from "react-router-dom"
+import { subscriptionCards } from "./subscription"
+import { useNavigate } from "react-router-dom"
 
 const paymentSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -31,24 +36,48 @@ const paymentSchema = z.object({
 type PaymentValues = z.infer<typeof paymentSchema>
 
 const PaymentPage = () => {
+  const navigate = useNavigate()
+  const { accessKey } = useParams<{ accessKey: string }>()
+  const selectedPlan = accessKey ? (subscriptionCards as any)[accessKey] : null
   const [isProcessing, setIsProcessing] = React.useState(false)
-
   const form = useForm<PaymentValues>({
     resolver: zodResolver(paymentSchema),
     defaultValues: { name: "", cardNumber: "", month: "", year: "", cvc: "" },
   })
 
+  const { user, isUpgradingPlan } = useAuth()
   const onSubmit = async (data: PaymentValues) => {
     setIsProcessing(true)
-    // Simulate API Call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log("Payment Data:", data)
-    toast.success("Payment Successful!")
-    setIsProcessing(false)
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await isUpgradingPlan(selectedPlan.accessKey)
+      toast.success(`Successfully upgraded to ${selectedPlan?.name}!`)
+      navigate("/")
+    } catch (error) {
+      toast.error("Payment failed. Please try again.")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  if (!user) {
+    return <Dashboard />
+  }
+
+  if (!selectedPlan) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Card className="p-6 text-center">
+          <p>Invalid plan selected.</p>
+          <Button onClick={() => navigate("/subscription")}>Go Back</Button>
+        </Card>
+      </div>
+    )
   }
 
   return (
-    <div className="flex min-h-screen bg-[linear-gradient(to_right,#8BC0FC_0%,#739ED0_43%,#6F99C9_62%,#537296_100%)] brightness-110 items-center justify-center bg-slate-50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 bg-[linear-gradient(to_right,#8BC0FC_0%,#739ED0_43%,#6F99C9_62%,#537296_100%)] p-4 brightness-110">
       <Card className="w-full max-w-lg border-none shadow-xl">
         <CardHeader className="space-y-1">
           <CardTitle className="flex items-center gap-2 text-2xl">
@@ -56,8 +85,25 @@ const PaymentPage = () => {
           </CardTitle>
           <CardDescription>Enter your payment details below</CardDescription>
         </CardHeader>
-
         <CardContent>
+          <div className="mb-6 rounded-lg border border-slate-100 bg-slate-50 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-500">
+                  Selected Plan
+                </p>
+                <p className="text-lg font-bold text-slate-900">
+                  {selectedPlan?.name}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-slate-500">Total Due</p>
+                <p className="text-lg font-bold text-blue-600">
+                  {selectedPlan?.price}
+                </p>
+              </div>
+            </div>
+          </div>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-3">
               <Label>Payment Method</Label>
@@ -81,7 +127,6 @@ const PaymentPage = () => {
                 </Label>
               </RadioGroup>
             </div>
-
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Name on Card</Label>
@@ -96,7 +141,6 @@ const PaymentPage = () => {
                   </p>
                 )}
               </div>
-
               <div className="grid gap-2">
                 <Label htmlFor="number">Card Number</Label>
                 <Input
@@ -111,7 +155,6 @@ const PaymentPage = () => {
                   </p>
                 )}
               </div>
-
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2 grid gap-2">
                   <Label>Expiration</Label>
@@ -138,7 +181,6 @@ const PaymentPage = () => {
                 </div>
               </div>
             </div>
-
             <Button
               disabled={isProcessing}
               type="submit"
@@ -155,7 +197,6 @@ const PaymentPage = () => {
             </Button>
           </form>
         </CardContent>
-
         <CardFooter className="flex justify-center border-t py-4">
           <p className="flex items-center gap-1 text-xs text-muted-foreground">
             <Lock className="h-3 w-3" /> Encrypted with 256-bit SSL

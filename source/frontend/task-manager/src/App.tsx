@@ -21,6 +21,7 @@ return (
 <Route path = "/tasks" element = {<Task/>}/>
 <Route path = "/subscription" element = {<Subscription/>}/>
 <Route path = "/subscription-plan" element = {<PaymentPage/>}/>
+<Route path = "/subscription-plan/:accessKey" element = {<PaymentPage/>}/>
 </Routes>
 </BrowserRouter>
 

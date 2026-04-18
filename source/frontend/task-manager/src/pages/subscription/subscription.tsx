@@ -6,11 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { toast } from "sonner"
 
-const Subscription = () => {
-  const { user } = useAuth()
-  const [isSubscribing, setIsSubscribing] = useState(false)
 
-  const subscriptionCards = {
+export const subscriptionCards = {
     free: {
       name: "Free Plan",
       price: "$0/month",
@@ -18,6 +15,7 @@ const Subscription = () => {
       gradient: "bg-[linear-gradient(to_right,#303030_0%,#FF6A8B_100%)]",
       buttonTitle: "Get Started",
       accessKey: "free",
+      link: "/subscription-plan/free",
     },
     pro: {
       name: "Pro Plan",
@@ -26,6 +24,7 @@ const Subscription = () => {
       gradient: "bg-[linear-gradient(to_right,#3F3F3F_0%,#4DFEE3_100%)]",
       buttonTitle: "Upgrade to Pro",
       accessKey: "pro",
+      link: "/subscription-plan/pro",
     },
     premium: {
       name: "Premium Plan",
@@ -34,8 +33,14 @@ const Subscription = () => {
       gradient: "bg-[linear-gradient(to_right,#3F3F3F_0%,#FFE100_100%)]",
       buttonTitle: "Upgrade to Premium",
       accessKey: "premium",
+      link: "/subscription-plan/premium",
     },
   }
+
+const Subscription = () => {
+  const { user } = useAuth()
+  const [isSubscribing, setIsSubscribing] = useState(false)
+
 
   const handleSubscription = async () => {
     setIsSubscribing(true)
@@ -60,7 +65,7 @@ const Subscription = () => {
         };
 
         return (
-          <div className="" key={key}>
+ <div className="" key={key}>
             <Card
               className={`h-100 w-90 ${plan.gradient} flex flex-col items-center justify-center rounded-[15px] duration-300 ease-in-out hover:scale-105 hover:cursor-pointer`}
               style={{
@@ -74,7 +79,7 @@ const Subscription = () => {
                 {plan.taskAmount}
               </span>
 
-              <Link to="/subscription-plan" onClick={handleButtonClick}>
+              <Link to={`${plan.link}`} onClick={handleButtonClick}>
                 <Button
                   disabled={isCurrentPlan || isSubscribing}
                   onClick={handleSubscription}
@@ -90,7 +95,7 @@ const Subscription = () => {
             </Card>
           </div>
         );
-      })}
+          })}
     </div>
   )
 }
