@@ -37,8 +37,9 @@ return (
     <>
       {!showConfirm ? (
         <>
-          <Link className = "hover:cursor-pointer hover:scale-105 w-25 h-9 text-white font-bold" to = "/subscription"><Button className = "bg-linear-to-r from-[#DA6767] to-[#8BC0FC] w-25 h-9 rounded-2xl hover:cursor-pointer hover:scale-105 text-white font-bold">Upgrade</Button></Link>
           <span className="text-white font-semibold">Hello, {user.name}</span>
+          <Link className = "hover:cursor-pointer hover:scale-105 w-25 h-9 text-white font-bold" to = "/subscription"><Button className = "bg-linear-to-r from-[#DA6767] to-[#8BC0FC] w-25 h-9 rounded-2xl hover:cursor-pointer hover:scale-105 text-white font-bold">Upgrade</Button></Link>
+          <Link className = "hover:cursor-pointer hover:scale-105 w-25 h-9 text-white font-bold" to = "/tasks"><Button className = "bg-linear-to-r from-[#DA6767] to-[#8BC0FC] w-25 h-9 rounded-2xl hover:cursor-pointer hover:scale-105 text-white font-bold">Tasks</Button></Link>
           <Button 
             onClick={() => setShowConfirm(true)} 
             className="w-25 h-9 text-[#EA7474] text-md font-bold bg-[#D9D9D9] cursor-pointer hover:scale-105"

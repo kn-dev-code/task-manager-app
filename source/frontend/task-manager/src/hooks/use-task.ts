@@ -29,7 +29,7 @@ interface TaskState {
 }
 
 export const useTask = create<TaskState>()((set) => ({
-  tasks: [] as Task[] | [],
+  tasks: [],
   isCreating: false,
   isUpdating: false,
   isDeleting: false,
@@ -75,8 +75,9 @@ toast.error(e.response?.data?.message || "Deletion failed");
   isTaskStatus: async() => {
     set({isTaskStatusLoading: true});
     try {
-const response = await API.post("/task/");
-set({tasks: response.data.task});
+const response = await API.get("/task/get-all-tasks");
+const taskData = Array.isArray(response.data) ? response.data : response.data.tasks;
+set({tasks: taskData || []});
     } catch(e: any) {
 toast.error(e.response?.data?.message || "Task Failed")
     } finally {

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTask } from "@/hooks/use-task"
 import { useAuth } from "@/hooks/use-auth"
 import {
@@ -38,11 +38,10 @@ const taskSchema = z.object({
 type TaskFormValues = z.infer<typeof taskSchema>
 
 const Task = () => {
-  const { create, isCreating } = useTask()
+  const { tasks, create, isCreating, isTaskStatus} = useTask()
   const [isCreatingTask, setIsCreatingTask] = useState(false)
   const { user } = useAuth()
   const [isEditingTask, setIsEditingTask] = useState(false)
-  const { tasks } = useTask()
 
   const taskForm = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
@@ -74,6 +73,11 @@ const Task = () => {
       toast.error("Failed to create task")
     }
   }
+  useEffect(() => {
+if (user) {
+  isTaskStatus()
+}
+  }, [tasks, isTaskStatus])
 
   
     if (!user) {
@@ -96,7 +100,8 @@ const Task = () => {
 
           <div className="mt-10 flex justify-center">
             {!isCreatingTask ? (
-              <Card className="flex h-40 w-60 flex-col items-center justify-center overflow-hidden border-2 border-dashed border-black bg-white font-bold text-black">
+              <div className = "fixed flex items-center justify-center p-4 pr-[60%] pt-10">
+              <Card className="flex h-40 w-60 flex-col items-center justify-center border-2 border-dashed border-black bg-white font-bold text-black">
                 <span>Create Task</span>
                 <Button
                   onClick={() => setIsCreatingTask(true)}
@@ -105,6 +110,7 @@ const Task = () => {
                   Create
                 </Button>
               </Card>
+              </div>
             ) : (
               <Form {...taskForm}>
                 <form
@@ -233,7 +239,7 @@ const Task = () => {
               </Form>
             )}
             <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.isArray(tasks) && tasks.length > 0 && tasks ? 
+              {Array.isArray(tasks) && tasks.length > 0 ? (
                  tasks?.map((task) => (
                     <Card
                       key={task.id}
@@ -250,7 +256,7 @@ const Task = () => {
                       </Button>
                     </Card>
                   ))
-                : null}
+                ) : null}
             </div>
           </div>
         </div>
