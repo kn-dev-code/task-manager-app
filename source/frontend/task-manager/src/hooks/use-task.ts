@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { create } from "zustand";
 
 interface Task {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   status: 'complete' | 'in-progress' | 'to-do';
@@ -61,9 +61,12 @@ export const useTask = create<TaskState>()((set) => ({
   },
 
   delete: async(id: string) => {
+    if (!id) return;
     try {
        await API.delete(`/task/delete-task/${id}`);
-       set({tasks: null});
+       set((state) => ({
+      tasks: state.tasks ? state.tasks.filter(t => (t._id !== id && t._id !== id)) : []
+    }));
        toast.success("Deletion successful");
     } catch(e: any) {
 toast.error(e.response?.data?.message || "Deletion failed");
