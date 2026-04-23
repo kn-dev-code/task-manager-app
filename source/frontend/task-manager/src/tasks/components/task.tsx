@@ -48,6 +48,7 @@ const Task = () => {
   } = useTask()
   const [isCreatingTask, setIsCreatingTask] = useState(false)
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const { user } = useAuth()
 
   const taskForm = useForm<TaskFormValues>({
@@ -64,7 +65,7 @@ const Task = () => {
 
   const cancelForm = () => {
     setIsCreatingTask(false)
-    setEditingTaskId(null);
+    setEditingTaskId(null)
     taskForm.reset()
   }
 
@@ -111,19 +112,25 @@ const Task = () => {
       }
       if (editingTaskId) {
         await updateMethod(formattedValues as updateTaskType, editingTaskId)
+        isTaskStatus()
         toast.success("Task updated!")
       } else {
         await createMethod(formattedValues)
+        isTaskStatus()
         toast.success("Task created!")
         taskForm.reset()
       }
       setEditingTaskId(null)
       setIsCreatingTask(false)
-      taskForm.reset()
+      taskForm.reset({})
     } catch (e) {
       toast.error("Failed to create task")
     }
   }
+
+  const filteredTasks = Array.isArray(tasks) ? tasks?.filter((task) => 
+    task.title.toLowerCase().includes(searchQuery.toLowerCase()) 
+  ) : []
 
   useEffect(() => {
     if (user) {
@@ -141,6 +148,10 @@ const Task = () => {
         <div className="overflow-hidden rounded-[15px] bg-linear-to-r from-[#DA6767] to-[#8BC0FC] p-10">
           <div className="flex flex-col items-center">
             <Input
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+              }}
               className="mx-auto h-14 max-w-2xl bg-[#D9D9D9]! font-bold text-black placeholder:text-black"
               type="search"
               placeholder="Search tasks..."
@@ -150,7 +161,7 @@ const Task = () => {
           <div className="flex flex-col items-center px-25">
             {!isCreatingTask ? (
               <div className="p-4 pt-10">
-                <Card className="flex h-40 w-60 flex-col items-center justify-center border-2 border-dashed border-black bg-white font-bold text-black">
+                <Card className="flex h-40 w-75 flex-col items-center justify-center border-2 border-dashed border-black bg-white font-bold text-black">
                   <span>Create Task</span>
                   <Button
                     onClick={() => setIsCreatingTask(true)}
@@ -295,11 +306,11 @@ const Task = () => {
               </Form>
             )}
             <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.isArray(tasks) && tasks.length > 0
-                ? tasks?.map((task) => (
+              {filteredTasks.length > 0
+                ? filteredTasks?.map((task) => (
                     <Card
                       key={task._id}
-                      className="flex-row-2 flex h-40 w-60 items-center justify-center overflow-hidden border-2 border-dashed border-black bg-white font-bold text-black"
+                      className="flex-row-2 flex h-40 w-75 items-center justify-center overflow-hidden border-2 border-dashed border-black bg-white font-bold text-black"
                     >
                       <span className="rounded border px-1 text-xs">
                         {task.title}
@@ -307,18 +318,20 @@ const Task = () => {
                       <span className="rounded border px-1 text-xs">
                         {task.priority}
                       </span>
-                      <Button
-                        onClick={() => handleEdit(task)}
-                        className="mt-4 h-12 w-30 border-2 border-black bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(task)}
-                        className="from -[#DA6767] mt-4 h-12 w-30 border-2 border-black bg-linear-to-r to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
-                      >
-                        Delete
-                      </Button>
+                      <div className="flex flex-row justify-around gap-x-5">
+                        <Button
+                          onClick={() => handleEdit(task)}
+                          className="mt-4 h-12 w-30 border-2 border-black bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          onClick={() => handleDelete(task)}
+                          className="from -[#DA6767] mt-4 h-12 w-30 border-2 border-black bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
+                        >
+                          Delete
+                        </Button>
+                      </div>
                     </Card>
                   ))
                 : null}
