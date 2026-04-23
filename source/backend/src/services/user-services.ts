@@ -1,5 +1,5 @@
 import UserModel from "../models/user-model";
-import { NotFoundException, UnauthorizedException } from "../util/app-error";
+import { NotFoundException} from "../util/app-error";
 
 export const findByIdUserService = async (userId: string) => {
   return await UserModel.findById(userId);

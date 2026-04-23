@@ -14,7 +14,7 @@ export const createTaskService = async(data: any, user: any) => {
   
   return await TaskModel.create({
     ...data,
-    user: user._id,
+    userId: user._id,
   })
 }
 

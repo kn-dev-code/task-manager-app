@@ -9,7 +9,7 @@ export type createTaskType = {
 
 
 export type updateTaskType = {
-  id: string;
+  _id: string;
   title?: string;
   description?: string;
   status?: 'complete' | 'in-progress' | 'to-do';

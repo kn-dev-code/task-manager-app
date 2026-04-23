@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import type { LoginType, RegisterType } from "../types/auth-types";
 import { create } from "zustand";
 import { API } from "../lib/api-client";
-import type { PaymentType } from "@/types/payment-types";
 
 interface User {
   _id: string;

@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { create } from "zustand";
 
 interface Task {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   status: 'complete' | 'in-progress' | 'to-do';
@@ -22,20 +22,20 @@ interface TaskState {
   isDeleting: boolean;
   isTaskStatusLoading: boolean;
 
-  create: (data: createTaskType) => void;
-  update: (data: updateTaskType, id: string) => void;
-  delete: (id: string) => void;
+  createMethod: (data: createTaskType) => void;
+  updateMethod: (data: updateTaskType, id: string) => void;
+  deleteMethod: (id: string) => void;
   isTaskStatus: () => void;
 }
 
 export const useTask = create<TaskState>()((set) => ({
-  tasks: [] as Task[] | [],
+  tasks: [],
   isCreating: false,
   isUpdating: false,
   isDeleting: false,
   isTaskStatusLoading: false,
 
-  create: async(data: createTaskType) => {
+  createMethod: async(data: createTaskType) => {
     set({isCreating: true});
     try {
       const response = await API.post("/task/create-task", data)
@@ -47,11 +47,16 @@ export const useTask = create<TaskState>()((set) => ({
     }
   },
 
-  update: async(data: updateTaskType, id) => {
+  updateMethod: async(data: updateTaskType, id) => {
     set({isUpdating: true});
     try {
-      const response = await API.put(`/task/update-task/${id}`, data);
-      set({tasks: response.data.task});
+      const response = await API.patch(`/task/update-task/${id}`, data);
+      const updatedTask = response.data.task;
+      set((state) => ({
+        tasks: state.tasks ? state.tasks.map((task) => (task._id === id ? updatedTask : task))
+        : [],
+      }))
+      //set({tasks: response.data.task})
       toast.success("Update successfully");
     } catch(e: any) {
       toast.error(e.response?.data?.message || "Update failed");
@@ -60,10 +65,13 @@ export const useTask = create<TaskState>()((set) => ({
     }
   },
 
-  delete: async(id: string) => {
+  deleteMethod: async(id: string) => {
+    if (!id) return;
     try {
        await API.delete(`/task/delete-task/${id}`);
-       set({tasks: null});
+       set((state) => ({
+      tasks: state.tasks ? state.tasks.filter(t => (t._id !== id && t._id !== id)) : []
+    }));
        toast.success("Deletion successful");
     } catch(e: any) {
 toast.error(e.response?.data?.message || "Deletion failed");
@@ -75,8 +83,9 @@ toast.error(e.response?.data?.message || "Deletion failed");
   isTaskStatus: async() => {
     set({isTaskStatusLoading: true});
     try {
-const response = await API.post("/task/");
-set({tasks: response.data.task});
+const response = await API.get("/task/get-all-tasks");
+const taskData = Array.isArray(response.data) ? response.data : response.data.tasks;
+set({tasks: taskData || []});
     } catch(e: any) {
 toast.error(e.response?.data?.message || "Task Failed")
     } finally {

@@ -7,10 +7,10 @@ export interface TaskDocument extends Document {
   description?: string;
   status: 'complete' | 'in-progress' | 'to-do';
   priority: 'low' | 'medium' | 'high';
-  userId: mongoose.Types.ObjectId;
   dueDate?: Date;
   tags: string[];
   createdAt: Date;
+  userId: Types.ObjectId;
   updatedAt: Date;
 };
 
@@ -28,16 +28,24 @@ const taskSchema = new Schema<TaskDocument>(
     priority: {
       type: String, enum: ['low', 'medium', 'high'], default: 'medium',
     },
-    userId: { 
-    type: Schema.Types.ObjectId, 
-    ref: "User", 
-    required: true 
-  },
     dueDate: {
       type: Date
     },
+     userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User', 
+      required: true,
+    },
   }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret: any) => {
+        delete ret._id;
+        delete ret.__v; 
+        return ret;
+      }
+    }
   }
 )
 

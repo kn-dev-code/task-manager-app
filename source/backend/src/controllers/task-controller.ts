@@ -23,7 +23,8 @@ export const updateTaskController = asyncHandler(async(req: Request, res: Respon
 const data = TaskSchema.partial().parse(req.body);
 const taskId = req.params.id.toString();
 const userId = req.user?._id.toString();
-if (!taskId || !userId) throw new BadRequestException("Missing task or user ID");
+if (!taskId) throw new BadRequestException("Missing task or user ID");
+if (!userId) throw new UnauthorizedException("Unauthorized");
 const task = await updateTaskService(data, taskId, userId);
 
  return res.status(HTTPSTATUS.OK).json({
@@ -34,14 +35,14 @@ const task = await updateTaskService(data, taskId, userId);
 })
 
 export const deleteTaskController = asyncHandler(async(req: Request, res: Response) => {
-const data = TaskSchema.parse(req.body);
 const taskId = req.params.id.toString();
 const userId = req.user?._id.toString();
 
 if (!taskId || !userId) throw new BadRequestException("Missing task or user ID");
 const task = await deleteTaskService(taskId, userId);
 return res.status(HTTPSTATUS.OK).json({
-  message: "Task deletion successfully"
+  message: "Task deletion successfully",
+  task
 })
 }) 
 
