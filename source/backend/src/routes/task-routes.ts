@@ -7,7 +7,7 @@ const taskRoutes = Router()
 
 taskRoutes.use(protect)
 .post("/create-task", createTaskController)
-.put("/update-task/:id", updateTaskController)
+.patch("/update-task/:id", updateTaskController)
 .delete("/delete-task/:id", deleteTaskController)
 .get("/get-task/:id", getTaskController)
 .get("/get-all-tasks", getAllTasksController)

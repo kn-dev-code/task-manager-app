@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import type { createTaskType } from "@/types/task-types"
+import type { createTaskType, updateTaskType } from "@/types/task-types"
 import { toast } from "sonner"
 import {
   Select,
@@ -40,15 +40,15 @@ type TaskFormValues = z.infer<typeof taskSchema>
 const Task = () => {
   const {
     tasks,
-    create,
+    createMethod,
     isCreating,
     isTaskStatus,
-    update,
-    delete: deleteId,
+    updateMethod,
+    deleteMethod,
   } = useTask()
   const [isCreatingTask, setIsCreatingTask] = useState(false)
-  const { user } = useAuth()
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
+  const { user } = useAuth()
 
   const taskForm = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
@@ -64,11 +64,32 @@ const Task = () => {
 
   const cancelForm = () => {
     setIsCreatingTask(false)
+    setEditingTaskId(null);
     taskForm.reset()
   }
 
-  const handleEdit = (task: any) => {
-    setEditingTaskId(task._id)
+  const handleDelete = async (task: any) => {
+    const idToUse = task._id || task.id
+
+    if (!idToUse) {
+      console.error("No ID found for task:", task)
+      return
+    }
+
+    if (window.confirm("Are you sure you want to delete this card?")) {
+      try {
+        await deleteMethod(idToUse)
+        toast.success("Task deleted!")
+        isTaskStatus()
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
+
+  const handleEdit = async (task: any) => {
+    const editingId = task._id || task.id
+    setEditingTaskId(editingId)
     setIsCreatingTask(true)
 
     taskForm.reset({
@@ -82,26 +103,6 @@ const Task = () => {
     })
   }
 
-const handleDelete = async (task: any) => {
-  
-  const deleteId = task._id || task.id;
-  
-  if (!deleteId) {
-    console.error("No ID found for task:", task);
-    return;
-  }
-
-  if (window.confirm("Are you sure?")) {
-    try {
-      await deleteId(deleteId);
-      toast.success("Task deleted!");
-      isTaskStatus();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-};
-
   const handleSubmit = async (values: TaskFormValues) => {
     try {
       const formattedValues: createTaskType = {
@@ -109,18 +110,21 @@ const handleDelete = async (task: any) => {
         dueDate: new Date(values.dueDate),
       }
       if (editingTaskId) {
-        await update(formattedValues as any, editingTaskId)
-        setEditingTaskId(null)
-        toast.success("Task updated successfully!")
+        await updateMethod(formattedValues as updateTaskType, editingTaskId)
+        toast.success("Task updated!")
       } else {
-        await create(formattedValues)
+        await createMethod(formattedValues)
+        toast.success("Task created!")
+        taskForm.reset()
       }
+      setEditingTaskId(null)
       setIsCreatingTask(false)
       taskForm.reset()
     } catch (e) {
       toast.error("Failed to create task")
     }
   }
+
   useEffect(() => {
     if (user) {
       isTaskStatus()
