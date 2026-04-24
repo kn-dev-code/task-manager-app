@@ -1,12 +1,12 @@
 import { TaskModel } from "../models/task-model";
-import { ForbiddenException, NotFoundException } from "../util/app-error";
+import { BadRequestException, ForbiddenException, NotFoundException } from "../util/app-error";
 import { TaskSchemaType } from "../validators/task-validators"
 
 
 
 export const createTaskService = async(data: any, user: any) => {
   const taskNum = await TaskModel.countDocuments({userId: user._id});
-  const taskLimit = user.planType === "pro" ? 500 : user.planType === "premium" ? 50 : 10;
+  const taskLimit = user.planType === "premium" ? Infinity : user.planType === "pro" ? 50 : 10;
 
   if (taskNum >= taskLimit) {
     throw new ForbiddenException("Max limit reached"); // Checking for task limit
