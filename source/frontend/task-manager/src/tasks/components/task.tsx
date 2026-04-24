@@ -51,6 +51,17 @@ const Task = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const { user } = useAuth()
 
+  const taskColors = [
+    "#004D99",
+    "#8B055A",
+    "#DD68FD",
+    "#F4FB29",
+    "#942626",
+    "#167F8D",
+    "#96164D",
+    "#FCA801",
+  ]
+
   const taskForm = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -128,9 +139,11 @@ const Task = () => {
     }
   }
 
-  const filteredTasks = Array.isArray(tasks) ? tasks?.filter((task) => 
-    task.title.toLowerCase().includes(searchQuery.toLowerCase()) 
-  ) : []
+  const filteredTasks = Array.isArray(tasks)
+    ? tasks?.filter((task) =>
+        task.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : []
 
   useEffect(() => {
     if (user) {
@@ -307,33 +320,39 @@ const Task = () => {
             )}
             <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredTasks.length > 0
-                ? filteredTasks?.map((task) => (
-                    <Card
-                      key={task._id}
-                      className="flex-row-2 flex h-40 w-75 items-center justify-center overflow-hidden border-2 border-dashed border-black bg-white font-bold text-black"
-                    >
-                      <span className="rounded border px-1 text-xs">
-                        {task.title}
-                      </span>
-                      <span className="rounded border px-1 text-xs">
-                        {task.priority}
-                      </span>
-                      <div className="flex flex-row justify-around gap-x-5">
-                        <Button
-                          onClick={() => handleEdit(task)}
-                          className="mt-4 h-12 w-30 border-2 border-black bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          onClick={() => handleDelete(task)}
-                          className="from -[#DA6767] mt-4 h-12 w-30 border-2 border-black bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </Card>
-                  ))
+                ? filteredTasks?.map((task, index) => {
+                    const currentColor = taskColors[index % taskColors.length]
+                    return (
+                      <Card
+                        key={task._id}
+                        style={{
+                          background: `linear-gradient(to right, #303030 0%, ${currentColor} 100%), filter: brightness(150%)`,
+                        }}
+                        className="flex-row-2 flex h-40 w-75 items-center justify-center overflow-hidden border-4 border-white bg-white font-bold text-black"
+                      >
+                        <span className="rounded border px-1 text-xs text-white">
+                          {task.title}
+                        </span>
+                        <span className="rounded border px-1 text-xs text-white">
+                          {task.priority}
+                        </span>
+                        <div className="flex flex-row justify-around gap-x-5">
+                          <Button
+                            onClick={() => handleEdit(task)}
+                            className="mt-4 h-12 w-30 border-2 border-white bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(task)}
+                            className="from -[#DA6767] mt-4 h-12 w-30 border-2 border-white bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </Card>
+                    )
+                  })
                 : null}
             </div>
           </div>

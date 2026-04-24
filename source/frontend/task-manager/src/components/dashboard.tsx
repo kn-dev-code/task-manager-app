@@ -1,8 +1,15 @@
 import { Button } from "./ui/button"
 import {Link} from "react-router-dom"
 import { useAuth } from "@/hooks/use-auth"
+import AdminView from "@/pages/auth/admin-view";
 const Dashboard = () => {
   const {user} = useAuth();
+
+  if (user?.role === "admin") {
+    return (
+      <AdminView/>
+    )
+  }
   return (
     <div className = "h-screen bg-[linear-gradient(to_right,#8BC0FC_0%,#739ED0_43%,#6F99C9_62%,#537296_100%)] brightness-110 flex flex-col justify-center items-center gap-y-5 pb-15">
       {user ? (
