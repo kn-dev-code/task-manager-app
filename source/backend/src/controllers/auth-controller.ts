@@ -3,7 +3,6 @@ import { asyncHandler } from "../middleware/async-handler";
 import { LoginSchema, RegisterSchema } from "../validators/user-validators";
 import { clearJWTCookie, JWTAuth } from "../util/cookie";
 import { HTTPSTATUS } from "../config/http-config";
-import { NotFoundException } from "../util/app-error";
 import { loginService, registerService } from "../services/auth-services";
 
 
@@ -61,10 +60,5 @@ export const authStatusController = asyncHandler(async(req: Request, res: Respon
     }
   })
 })
-
-
-
-
-
 
 
