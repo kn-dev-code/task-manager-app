@@ -85,4 +85,16 @@ describe("Task API - Sad Path & Security Tests", () => {
         expect(res.body.task.title).not.toBe("User B's Private Task");
     }
   });
+
+  it("SHOULD fail when a non-admin tries to update their own role (Mass Assignment Check)", async () => {
+  const response = await request(app)
+    .patch("/api/admin/edit-user/YOUR_USER_ID") 
+    .set("Cookie", authCookie)
+    .send({
+      role: "admin",
+      planType: "pro"
+    });
+
+  expect(response.status).toBe(403); 
+});
 });

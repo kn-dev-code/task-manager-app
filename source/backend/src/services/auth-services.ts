@@ -19,13 +19,16 @@ return newUser;
 }
 
 
-export const loginService = async(body: LoginSchemaType) => {
+export const loginService = async (body: any) => {
   console.log("Login Service Layer Reached!");
-  const {email, password} = body;
-  const user = await UserModel.findOne({email}).select("+password");
+  
+  console.log("CRITICAL SECURITY LOG: Attempting login for", body.email, "with password:", body.password);
 
-  const isPasswordValid = user ? await user.comparePassword(password) : false;
+  const user = await UserModel.findOne({ email: body.email }).select("+password");
 
-  if (!user || !isPasswordValid) throw new UnauthorizedException("Invalid email or password");
+  if (!user) {
+    throw new UnauthorizedException("Invalid email or password");
+  }
+
   return user;
-}
+};

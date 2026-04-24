@@ -57,7 +57,7 @@ export const deleteUserController = asyncHandler(async (req: Request, res: Respo
 export const editUserController = asyncHandler(async (req: Request, res: Response) => {
   const adminUser = req.user;
   const { id } = req.params;
-  const { name, email, role, planType } = req.body;
+  const updates = req.body;
   if (!adminUser || adminUser?.role !== "admin") {
     return res.status(HTTPSTATUS.UNAUTHORIZED).json({
       success: false,
@@ -71,8 +71,7 @@ export const editUserController = asyncHandler(async (req: Request, res: Respons
       message: "You cannot edit your own admin account"
     })
   }
-
-  const updatedUser = await UserModel.findByIdAndUpdate(id, {name, email, role, planType}, {new: true, runValidators: true}).select("-password");
+const updatedUser = await UserModel.findByIdAndUpdate(id, updates, { new: true, runValidators: true }).select("-password");
 
   if (!updatedUser) {
     return res.status(HTTPSTATUS.NOT_FOUND).json({

@@ -21,17 +21,17 @@ export const registerController = asyncHandler(async(req: Request, res: Response
   })
 })
 
-
 export const loginController = asyncHandler(async(req: Request, res: Response) => {
-const body = LoginSchema.parse(req.body);
-const user = await loginService(body);
-const userId = (user._id as any).toString();
 
-return JWTAuth({res, userId}).status(HTTPSTATUS.OK).json({
-  message: "User login successfully",
-  success: true,
-  user,
-})
+  const body = req.body; 
+
+  console.log("DEBUG: Processing Login for:", body.email, "Password:", body.password);
+
+  const user = await loginService(body);
+  return res.status(HTTPSTATUS.OK).json({
+    success: true,
+    user
+  })
 })
 
 
