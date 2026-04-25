@@ -186,7 +186,7 @@ const Task = () => {
               </div>
             ) : (
               <Form {...taskForm}>
-                <div className="fixed min-w-4xl items-center">
+                <div className="fixed min-w-4xl items-center z-20 transition-all duration-300 ease-in-out">
                   <form
                     onSubmit={taskForm.handleSubmit(handleSubmit)}
                     className="relative flex flex-col gap-y-5 rounded-[15px] border-2 border-black bg-linear-to-r from-[#303030] to-[#00A6FF] p-10 py-20 text-white shadow-2xl"
@@ -326,7 +326,8 @@ const Task = () => {
                       <Card
                         key={task._id}
                         style={{
-                          background: `linear-gradient(to right, #303030 0%, ${currentColor} 100%), filter: brightness(150%)`,
+                          background: `linear-gradient(to right, #303030 0%, ${currentColor} 100%)`,
+                          filter: "brightness(120%)",
                         }}
                         className="flex-row-2 flex h-40 w-75 items-center justify-center overflow-hidden border-4 border-white bg-white font-bold text-black"
                       >
@@ -339,13 +340,13 @@ const Task = () => {
                         <div className="flex flex-row justify-around gap-x-5">
                           <Button
                             onClick={() => handleEdit(task)}
-                            className="mt-4 h-12 w-30 border-2 border-white bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
+                            className="mt-4 h-12 w-30 border-2 border-white bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer transition-all duration-300 ease-in-out"
                           >
                             Edit
                           </Button>
                           <Button
                             onClick={() => handleDelete(task)}
-                            className="from -[#DA6767] mt-4 h-12 w-30 border-2 border-white bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer"
+                            className="from -[#DA6767] mt-4 h-12 w-30 border-2 border-white bg-linear-to-r from-[#DA6767] to-[#8BC0FC] text-white hover:scale-105 hover:cursor-pointer transition-all duration-300 ease-in-out"
                           >
                             Delete
                           </Button>
